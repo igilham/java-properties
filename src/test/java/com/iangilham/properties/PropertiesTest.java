@@ -1,15 +1,13 @@
 package com.iangilham.properties;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
-@RunWith(JUnit4.class)
 public class PropertiesTest {
 	@Test
 	public void loadBasic() throws IOException {
@@ -21,8 +19,9 @@ public class PropertiesTest {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		assertFalse("failure - properties is empty", props.isEmpty());
 		assertEquals("failure - property not read", 1, props.size());
 		assertEquals("failure - incorrect property value",
-				"This is my value string.", props.get("key"));
+				"This is my value string.", props.getProperty("key"));
 	}
 }

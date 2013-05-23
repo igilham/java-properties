@@ -6,11 +6,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.Serializable;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The Properties class represents a persistent set of properties in the
@@ -30,12 +32,14 @@ import java.util.HashMap;
  * 
  * @see java.util.Properties
  */
-public class Properties extends HashMap<String, String> {
+public class Properties implements Serializable {
 
 	/**
 	 * Serial version ID.
 	 */
 	private static final long serialVersionUID = -1667669306471601205L;
+
+	private final Map<String, String> map = new HashMap<String, String>();
 
 	/**
 	 * Name of the preferred character set.
@@ -43,10 +47,9 @@ public class Properties extends HashMap<String, String> {
 	private static final String preferredCharset = "UTF-8";
 
 	/**
-	 * Default constructor
+	 * Default constructor.
 	 */
 	public Properties() {
-		super();
 	}
 
 	/**
@@ -58,7 +61,7 @@ public class Properties extends HashMap<String, String> {
 	 *            during construction.
 	 */
 	public Properties(final Properties defaults) {
-		super(defaults);
+		this.map.putAll(defaults.map);
 	}
 
 	/**
@@ -107,6 +110,7 @@ public class Properties extends HashMap<String, String> {
 	 */
 	public void store(final OutputStream outStream, final String comments)
 			throws IOException {
+		throw new UnsupportedOperationException("Not implemented");
 	}
 
 	/**
@@ -119,6 +123,49 @@ public class Properties extends HashMap<String, String> {
 	 */
 	public void store(final Writer writer, final String comments)
 			throws IOException {
+		throw new UnsupportedOperationException("Not implemented");
+	}
+
+	/**
+	 * Gets the property associated with a key.
+	 * 
+	 * @param key
+	 *            The key that references the desired property.
+	 * @return The requested property's value if present, otherwise null.
+	 */
+	public String getProperty(final String key) {
+		return map.get(key);
+	}
+
+	/**
+	 * Add a property to the container. This will overwrite any existing
+	 * property with the same key.
+	 * 
+	 * @param key
+	 *            The key of the new property.
+	 * @param value
+	 *            The value of the new property.
+	 */
+	public void setProperty(final String key, final String value) {
+		map.put(key, value);
+	}
+
+	/**
+	 * Get the number of properties in the container.
+	 * 
+	 * @return The number of properties in the container.
+	 */
+	public int size() {
+		return map.size();
+	}
+
+	/**
+	 * Determine whether there are any properties in the container.
+	 * 
+	 * @return True if the container is empty, else false.
+	 */
+	public boolean isEmpty() {
+		return map.isEmpty();
 	}
 
 	/**
@@ -153,7 +200,8 @@ public class Properties extends HashMap<String, String> {
 			int index = property.indexOf('=');
 			// insert into the map
 			if (index > 0) {
-				put(property.substring(0, index), property.substring(index + 1));
+				map.put(property.substring(0, index),
+						property.substring(index + 1));
 			}
 
 			// clean up loop side-effects
